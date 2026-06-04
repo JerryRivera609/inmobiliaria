@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MessageCircle } from "lucide-react";
 
 type Listing = {
   title: string;
@@ -18,6 +19,19 @@ type PropertyShowcaseProps = {
 };
 
 const tabs = ["Venta", "Alquiler", "Proyecto nuevo"];
+const whatsappNumber = "51917741061";
+
+const buildWhatsappUrl = (listing: Listing) => {
+  const message = [
+    "Hola Casa Imagen, quiero informacion sobre este inmueble.",
+    `Inmueble: ${listing.title}`,
+    `Ubicacion: ${listing.location}`,
+    `Precio: ${listing.price}`,
+    `Detalles: ${listing.details}`,
+  ].join("\n");
+
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+};
 
 export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]);
@@ -170,7 +184,7 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
               }}
               onMouseEnter={(event) => animateCard(event.currentTarget, true)}
               onMouseLeave={(event) => animateCard(event.currentTarget, false)}
-              className="overflow-hidden rounded-lg border border-[#0D233A]/10 bg-white shadow-[0_18px_44px_rgba(13,35,58,0.08)]"
+              className="flex flex-col overflow-hidden rounded-lg border border-[#0D233A]/10 bg-white shadow-[0_18px_44px_rgba(13,35,58,0.08)]"
             >
               <div className="relative aspect-[1.42] overflow-hidden bg-[#dfeadf]">
                 <Image
@@ -185,7 +199,7 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
                 </div>
               </div>
 
-              <div className="p-5">
+              <div className="flex flex-1 flex-col p-5">
                 <p className="text-sm font-bold text-[#3b9c3f]">
                   {listing.location}
                 </p>
@@ -200,6 +214,16 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
                     {listing.details}
                   </p>
                 </div>
+
+                <a
+                  href={buildWhatsappUrl(listing)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#3b9c3f] px-4 text-sm font-bold text-white transition hover:bg-[#318535]"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Consultar por WhatsApp
+                </a>
               </div>
             </article>
           ))}
