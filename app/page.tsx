@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ContactSection from "./components/ContactSection";
+import Footer from "./components/Footer";
 import PropertyShowcase from "./components/PropertyShowcase";
 
 const navItems = [
@@ -218,6 +219,7 @@ export default function Home() {
       </section>
 
       <ContactSection />
+      <Footer />
     </main>
   );
 }
