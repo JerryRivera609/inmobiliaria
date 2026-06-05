@@ -4,13 +4,37 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MessageCircle } from "lucide-react";
+import {
+  Bath,
+  BedDouble,
+  CarFront,
+  House,
+  LandPlot,
+  MessageCircle,
+  Ruler,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
 
-type Listing = {
+export type ListingSpecKey =
+  | "beds"
+  | "baths"
+  | "parking"
+  | "maintenance"
+  | "land"
+  | "built";
+
+export type ListingSpec = {
+  type: ListingSpecKey;
+  value: string;
+  label: string;
+};
+
+export type Listing = {
   title: string;
   location: string;
   price: string;
-  details: string;
+  specs: ListingSpec[];
   image: string;
 };
 
@@ -21,13 +45,26 @@ type PropertyShowcaseProps = {
 const tabs = ["Venta", "Alquiler", "Proyecto nuevo"];
 const whatsappNumber = "51917741061";
 
+const specIconMap: Record<ListingSpecKey, LucideIcon> = {
+  beds: BedDouble,
+  baths: Bath,
+  parking: CarFront,
+  maintenance: Wallet,
+  land: LandPlot,
+  built: Ruler,
+};
+
 const buildWhatsappUrl = (listing: Listing) => {
+  const specs = listing.specs
+    .map((spec) => `${spec.label}: ${spec.value}`)
+    .join(" | ");
+
   const message = [
     "Hola Casa Imagen, quiero informacion sobre este inmueble.",
     `Inmueble: ${listing.title}`,
     `Ubicacion: ${listing.location}`,
     `Precio: ${listing.price}`,
-    `Detalles: ${listing.details}`,
+    `Caracteristicas: ${specs}`,
   ].join("\n");
 
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -143,7 +180,7 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
               </span>
               <input
                 type="search"
-                placeholder="Ubicación, ID o nombre de propiedad"
+                placeholder="Ubicación o nombre de propiedad"
                 className="mt-2 w-full bg-transparent text-base font-semibold text-[#0D233A] outline-none placeholder:text-[#8a99a5]"
               />
             </label>
@@ -173,7 +210,7 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
           </p>
         </div>
 
-        <div className="property-grid mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="property-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
           {listings.slice(0, 6).map((listing, index) => (
             <article
               key={listing.title}
@@ -184,9 +221,9 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
               }}
               onMouseEnter={(event) => animateCard(event.currentTarget, true)}
               onMouseLeave={(event) => animateCard(event.currentTarget, false)}
-              className="flex flex-col overflow-hidden rounded-lg border border-[#0D233A]/10 bg-white shadow-[0_18px_44px_rgba(13,35,58,0.08)]"
+              className="flex h-full min-h-[500px] flex-col overflow-hidden rounded-lg border border-[#0D233A]/10 bg-white shadow-[0_18px_44px_rgba(13,35,58,0.08)]"
             >
-              <div className="relative aspect-[1.42] overflow-hidden bg-[#dfeadf]">
+              <div className="relative aspect-[1.82] overflow-hidden bg-[#dfeadf]">
                 <Image
                   src={listing.image}
                   alt={listing.title}
@@ -194,34 +231,56 @@ export default function PropertyShowcase({ listings }: PropertyShowcaseProps) {
                   sizes="(min-width: 1280px) 392px, (min-width: 768px) 50vw, 100vw"
                   className="object-cover transition duration-500 hover:scale-105"
                 />
-                <div className="absolute left-4 top-4 rounded-md bg-[#3b9c3f] px-3 py-2 text-xs font-bold uppercase text-white shadow-[0_10px_22px_rgba(31,108,47,0.24)]">
+                <div className="absolute left-3 top-3 rounded-md bg-[#3b9c3f] px-2.5 py-1.5 text-[11px] font-bold uppercase text-white shadow-[0_10px_22px_rgba(31,108,47,0.24)]">
                   Disponible
                 </div>
               </div>
 
-              <div className="flex flex-1 flex-col p-5">
-                <p className="text-sm font-bold text-[#3b9c3f]">
+              <div className="flex flex-1 flex-col p-4">
+                <p className="truncate text-xs font-bold leading-5 text-[#3b9c3f]">
                   {listing.location}
                 </p>
-                <h3 className="mt-2 text-xl font-bold leading-snug text-[#0D233A]">
+                <h3 className="mt-1.5 h-[50px] overflow-hidden text-lg font-bold leading-snug text-[#0D233A]">
                   {listing.title}
                 </h3>
-                <div className="mt-5 border-t border-[#0D233A]/10 pt-4">
-                  <p className="text-lg font-bold text-[#0D233A]">
+                <div className="mt-3 border-t border-[#0D233A]/10 pt-3">
+                  <p className="text-base font-bold text-[#0D233A]">
                     {listing.price}
                   </p>
-                  <p className="mt-2 text-sm font-semibold text-[#5d7080]">
-                    {listing.details}
-                  </p>
+                </div>
+
+                <div className="mb-4 mt-3 grid min-h-[84px] grid-cols-2 gap-2 sm:grid-cols-3">
+                  {listing.specs.map((spec) => {
+                    const Icon = specIconMap[spec.type] ?? House;
+
+                    return (
+                      <span
+                        key={`${listing.title}-${spec.type}`}
+                        className="flex h-10 min-w-0 items-center gap-1.5 rounded-md border border-[#0D233A]/10 bg-[#f4f8f4] px-2"
+                      >
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#3b9c3f]/12 text-[#3b9c3f]">
+                          <Icon className="h-3.5 w-3.5" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block truncate text-xs font-bold leading-3.5 text-[#0D233A]">
+                            {spec.value}
+                          </span>
+                          <span className="block truncate text-[9px] font-bold uppercase leading-3 text-[#6a7b89]">
+                            {spec.label}
+                          </span>
+                        </span>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <a
                   href={buildWhatsappUrl(listing)}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-5 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#3b9c3f] px-4 text-sm font-bold text-white transition hover:bg-[#318535]"
+                  className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#3b9c3f] px-4 text-sm font-bold text-white transition hover:bg-[#318535]"
                 >
-                  <MessageCircle className="h-5 w-5" />
+                  <MessageCircle className="h-4.5 w-4.5" />
                   Consultar por WhatsApp
                 </a>
               </div>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
-import PropertyShowcase from "./components/PropertyShowcase";
+import PropertyShowcase, { type Listing } from "./components/PropertyShowcase";
 
 const navItems = [
   { label: "Inicio", href: "#inicio" },
@@ -10,47 +10,76 @@ const navItems = [
   { label: "Contacto", href: "#contacto" },
 ];
 
-const featuredListings = [
+const featuredListings: Listing[] = [
   {
-    title: "Casa familiar en zona residencial",
-    location: "Santiago de Surco",
-    price: "Desde US$ 285,000",
-    details: "4 dorm. · 3 baños · 220 m²",
-    image: "/figma-house.jpg",
+    title: "Casa en venta en Chorrillos",
+    location: "Calle José Francisco de Zela, Chorrillos, Lima",
+    price: "USD 105,000",
+    specs: [
+      { type: "beds", value: "8", label: "dorm." },
+      { type: "baths", value: "4", label: "bañ." },
+      { type: "parking", value: "1", label: "estac." },
+      { type: "maintenance", value: "S/ 0.00", label: "mant." },
+      { type: "land", value: "200 m²", label: "terreno" },
+      { type: "built", value: "320 m²", label: "construida" },
+    ],
+    image: "/producto1.jpg",
   },
   {
-    title: "Departamento con vista urbana",
-    location: "Miraflores",
-    price: "Desde US$ 168,000",
-    details: "3 dorm. · 2 baños · 118 m²",
-    image: "/figma-house.jpg",
+    title: "Casa de 2 pisos más azotea techada",
+    location: "Urb. Sol de Piura IV - II Etapa, Veintiséis de Octubre, Piura",
+    price: "USD 70,000",
+    specs: [
+      { type: "beds", value: "6", label: "dorm." },
+      { type: "baths", value: "3", label: "bañ." },
+      { type: "maintenance", value: "S/ 0.00", label: "mant." },
+      { type: "land", value: "68 m²", label: "terreno" },
+      { type: "built", value: "120 m²", label: "construida" },
+    ],
+    image: "/producto2.jpg",
   },
   {
     title: "Residencia moderna con terraza",
     location: "La Molina",
     price: "Desde US$ 342,000",
-    details: "5 dorm. · 4 baños · 310 m²",
+    specs: [
+      { type: "beds", value: "5", label: "dorm." },
+      { type: "baths", value: "4", label: "baños" },
+      { type: "built", value: "310 m²", label: "construida" },
+    ],
     image: "/figma-house.jpg",
   },
   {
     title: "Proyecto boutique de inversión",
     location: "San Isidro",
     price: "Desde US$ 210,000",
-    details: "2 dorm. · 2 baños · 96 m²",
+    specs: [
+      { type: "beds", value: "2", label: "dorm." },
+      { type: "baths", value: "2", label: "baños" },
+      { type: "built", value: "96 m²", label: "construida" },
+    ],
     image: "/figma-house.jpg",
   },
   {
     title: "Casa de estreno con jardín",
     location: "Chacarilla",
     price: "Desde US$ 398,000",
-    details: "4 dorm. · 4 baños · 280 m²",
+    specs: [
+      { type: "beds", value: "4", label: "dorm." },
+      { type: "baths", value: "4", label: "baños" },
+      { type: "built", value: "280 m²", label: "construida" },
+    ],
     image: "/figma-house.jpg",
   },
   {
     title: "Penthouse con terraza privada",
     location: "Barranco",
     price: "Desde US$ 255,000",
-    details: "3 dorm. · 3 baños · 145 m²",
+    specs: [
+      { type: "beds", value: "3", label: "dorm." },
+      { type: "baths", value: "3", label: "baños" },
+      { type: "built", value: "145 m²", label: "construida" },
+    ],
     image: "/figma-house.jpg",
   },
 ];
